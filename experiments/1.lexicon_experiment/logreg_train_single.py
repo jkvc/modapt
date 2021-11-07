@@ -8,9 +8,7 @@ from config import LEXICON_DIR
 from experiments.datadef.zoo import get_datadef
 from modapt.eval import reduce_and_save_metrics
 from modapt.lexicon import eval_lexicon_model, run_lexicon_experiment
-from modapt.model.logreg_config.grid_search import (
-    load_logreg_model_config_all_archs,
-)
+from modapt.model.logreg_config.grid_search import load_logreg_model_config_all_archs
 from modapt.utils import read_txt_as_str_list, save_json
 
 _DATASET_NAME = sys.argv[1]
@@ -64,6 +62,7 @@ for arch, config in _ARCH2CONFIG.items():
             _DATADEF,
             test_samples,
             vocab,
+            use_lemmatize=False,
             use_source_individual_norm=config["use_source_individual_norm"],
             labelprop_split="test",
         )

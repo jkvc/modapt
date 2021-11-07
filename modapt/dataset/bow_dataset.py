@@ -2,6 +2,7 @@ import re
 from collections import Counter
 from typing import Dict, List, Tuple
 
+import nltk
 import numpy as np
 import torch
 from modapt.dataset.data_sample import DataSample
@@ -11,17 +12,21 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from tqdm import tqdm
 
-STOPWORDS = stopwords.words("english")
-
 
 def get_tokens(cleaned_text: str) -> List[str]:
+    try:
+        sws = set(stopwords.words("english"))
+    except LookupError:
+        nltk.download("stopwords")
+        sws = set(stopwords.words("english"))
+
     text = cleaned_text.lower()
     nopunc = re.sub(r"[^\w\s]", "", text)
     tokens = nopunc.split()
     tokens = [
         w
         for w in tokens
-        if (not w.startswith("@") and w not in STOPWORDS and not w.isdigit())
+        if (not w.startswith("@") and w not in sws and not w.isdigit())
     ]
     return tokens
 
