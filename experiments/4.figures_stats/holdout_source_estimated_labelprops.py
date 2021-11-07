@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from config import FIGURE_DPI, FIGURES_DIR, LEXICON_DIR, MODELS_DIR, RANDOM_SEED
-from modapt.datadef.zoo import get_datadef
+from experiments.datadef.zoo import get_datadef
 from modapt.dataset.common import calculate_labelprops
 from modapt.dataset.roberta_dataset import RobertaDataset
 from modapt.learning import valid_epoch

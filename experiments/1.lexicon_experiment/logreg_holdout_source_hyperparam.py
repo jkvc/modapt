@@ -4,7 +4,7 @@ import sys
 from os.path import basename, join, realpath
 
 from config import LEXICON_DIR
-from modapt.datadef.zoo import get_datadef
+from experiments.datadef.zoo import get_datadef
 from modapt.eval import reduce_and_save_metrics
 from modapt.lexicon import run_lexicon_experiment
 from modapt.model.logreg_config.grid_search import (

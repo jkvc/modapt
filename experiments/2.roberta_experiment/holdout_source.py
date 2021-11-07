@@ -5,7 +5,7 @@ from os.path import basename, exists, join, realpath
 
 import torch
 from config import BATCHSIZE, MODELS_DIR
-from modapt.datadef.zoo import get_datadef
+from experiments.datadef.zoo import get_datadef
 from modapt.dataset.roberta_dataset import RobertaDataset
 from modapt.eval import reduce_and_save_metrics
 from modapt.experiments import run_experiments

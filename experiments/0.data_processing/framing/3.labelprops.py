@@ -1,7 +1,7 @@
 from os import makedirs
 from os.path import join
 
-from modapt.datadef.definitions.framing import (
+from experiments.datadef.definitions.framing import (
     _LABELPROPS_DIR,
     ISSUES,
     PRIMARY_FRAME_NAMES,

@@ -1,7 +1,7 @@
 from os import makedirs
 from os.path import join
 
-from modapt.datadef.definitions.sentiment import (
+from experiments.datadef.definitions.sentiment import (
     _LABELPROPS_DIR,
     POLARITY_NAMES,
     SENTIMENT_SOURCES,

@@ -4,7 +4,7 @@ from typing import Dict, List, Tuple
 
 import numpy as np
 import torch
-from modapt.datadef.zoo import DatasetDefinition
+from experiments.datadef.zoo import DatasetDefinition
 from modapt.dataset.data_sample import DataSample
 from modapt.utils import AUTO_DEVICE
 from nltk.corpus import stopwords

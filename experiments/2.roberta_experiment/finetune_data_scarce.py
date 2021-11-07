@@ -5,7 +5,7 @@ from os.path import basename, dirname, join, realpath
 from random import Random
 
 from config import BATCHSIZE, MODELS_DIR, RANDOM_SEED, ROBERTA_ADAPT_N_SAMPLES
-from modapt.datadef.zoo import get_datadef
+from experiments.datadef.zoo import get_datadef
 from modapt.dataset.roberta_dataset import RobertaDataset
 from modapt.eval import reduce_and_save_metrics
 from modapt.experiments import run_experiments

@@ -9,7 +9,7 @@ from random import Random
 import matplotlib.pyplot as plt
 import numpy as np
 from config import FIGURES_DIR, MODELS_DIR, ROBERTA_ADAPT_N_SAMPLES
-from modapt.datadef.zoo import get_datadef
+from experiments.datadef.zoo import get_datadef
 from modapt.utils import load_json, save_plt
 
 _DATASET_NAME = sys.argv[1]

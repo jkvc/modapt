@@ -8,7 +8,7 @@ from posixpath import dirname
 from random import Random
 
 from config import LEXICON_DIR, RANDOM_SEED
-from modapt.datadef.zoo import get_datadef
+from experiments.datadef.zoo import get_datadef
 from modapt.dataset.bow_dataset import get_tokens
 from modapt.eval import reduce_and_save_metrics
 from modapt.utils import save_json

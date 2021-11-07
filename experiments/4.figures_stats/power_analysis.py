@@ -7,7 +7,7 @@ from os.path import exists, join
 import numpy as np
 import torch
 from config import BATCHSIZE, LEXICON_DIR, MODELS_DIR, OUTPUT_DIR
-from modapt.datadef.zoo import get_datadef
+from experiments.datadef.zoo import get_datadef
 from modapt.dataset.bow_dataset import (
     build_bow_full_batch,
     get_all_tokens,

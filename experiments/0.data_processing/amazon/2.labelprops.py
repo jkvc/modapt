@@ -1,7 +1,7 @@
 from os import makedirs
 from os.path import join
 
-from modapt.datadef.definitions.amazon import (
+from experiments.datadef.definitions.amazon import (
     CATEGORIES,
     LABELPROPS_DIR,
     RATING_N_CLASSES,

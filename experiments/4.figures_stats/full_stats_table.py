@@ -6,7 +6,7 @@ from os.path import basename, join, realpath
 import numpy as np
 import pandas as pd
 from config import LEXICON_DIR, MODELS_DIR, OUTPUT_DIR
-from modapt.datadef.zoo import get_datadef
+from experiments.datadef.zoo import get_datadef
 from modapt.utils import load_json
 
 _DATASETS = [

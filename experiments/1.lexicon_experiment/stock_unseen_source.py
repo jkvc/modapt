@@ -9,7 +9,7 @@ from posixpath import dirname
 import pandas as pd
 import torch
 from config import LEXICON_DIR, STOCK_LEXICON_DIR
-from modapt.datadef.zoo import get_datadef
+from experiments.datadef.zoo import get_datadef
 from modapt.eval import reduce_and_save_metrics
 from modapt.lexicon import eval_lexicon_model, train_lexicon_model
 from modapt.model import get_model

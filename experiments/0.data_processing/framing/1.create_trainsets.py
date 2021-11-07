@@ -2,7 +2,7 @@ from os.path import join
 
 import pandas as pd
 from config import DATA_DIR
-from modapt.datadef import zoo
+from experiments.datadef import zoo
 from modapt.utils import load_json, save_json
 
 FRAMING_DATA_DIR = join(DATA_DIR, "framing_labeled")
