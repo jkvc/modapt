@@ -4,8 +4,8 @@ from typing import Dict, List, Tuple
 
 import numpy as np
 import torch
-from experiments.datadef.zoo import DatasetDefinition
 from modapt.dataset.data_sample import DataSample
+from modapt.dataset.dataset_def import DatasetDefinition
 from modapt.utils import AUTO_DEVICE
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer

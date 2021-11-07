@@ -3,8 +3,9 @@ from typing import Any, Dict, List
 
 import numpy as np
 from config import DATA_DIR, KFOLD
-from experiments.datadef.zoo import DatasetDefinition, register_datadef
+from experiments.datadef.zoo import register_datadef
 from modapt.dataset.data_sample import DataSample
+from modapt.dataset.dataset_def import DatasetDefinition
 from modapt.utils import load_json
 from tqdm import tqdm
 
