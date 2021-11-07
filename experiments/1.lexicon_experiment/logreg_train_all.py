@@ -31,7 +31,7 @@ for arch, config in _ARCH2CONFIG.items():
     savedir = join(_SAVE_ROOT, arch)
 
     if not exists(join(savedir, "model.pth")):
-        train_sources = _DATADEF.source_names
+        train_sources = _DATADEF.domain_names
         train_samples = _DATADEF.load_splits_func(train_sources, ["train"])["train"]
         valid_samples = _DATADEF.load_splits_func(train_sources, ["test"])["test"]
 
@@ -50,7 +50,7 @@ for arch, config in _ARCH2CONFIG.items():
     model = torch.load(join(savedir, "model.pth"))
     vocab = read_txt_as_str_list(join(savedir, "vocab.txt"))
 
-    for source in _DATADEF.source_names:
+    for source in _DATADEF.domain_names:
         print(">> test", source)
         single_source_samples = _DATADEF.load_splits_func([source], ["test"])["test"]
         test_metrics = eval_lexicon_model(

@@ -69,8 +69,8 @@ def load_all_amazon_review_samples(
                     text=raw_data[id]["reviewText"],
                     # rating=raw_data[id]["overall"],
                     y_idx=rating_to_ridx(raw_data[id]["overall"]),
-                    source_name=c,
-                    source_idx=CATEGORY2CIDX[c],
+                    domain_name=c,
+                    domain_idx=CATEGORY2CIDX[c],
                 )
             )
     return samples
@@ -87,7 +87,7 @@ def load_splits(
 register_datadef(
     "amazon",
     DatasetDefinition(
-        source_names=CATEGORIES,
+        domain_names=CATEGORIES,
         label_names=RATING_NAMES,
         load_splits_func=load_splits,
         load_labelprops_func=load_labelprops,

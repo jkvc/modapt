@@ -50,7 +50,7 @@ def valid_roberta_model(arch):
     save_preds_dir = join(model_dir, f"{_VALID_OR_TEST}_preds")
     makedirs(save_preds_dir, exist_ok=True)
 
-    for holdout_source in _DATADEF.source_names:
+    for holdout_source in _DATADEF.domain_names:
         print(">>>>", holdout_source)
         save_preds_path = join(
             model_dir, f"{_VALID_OR_TEST}_preds", f"{holdout_source}.json"
@@ -65,7 +65,7 @@ def valid_roberta_model(arch):
         valid_dataset = RobertaDataset(
             valid_samples,
             n_classes=_DATADEF.n_classes,
-            source_names=_DATADEF.source_names,
+            domain_names=_DATADEF.domain_names,
             source2labelprops=_DATADEF.load_labelprops_func(_LOAD_SPLIT_NAME),
         )
         valid_loader = DataLoader(
@@ -106,7 +106,7 @@ def valid_logreg_model(arch):
     save_preds_dir = join(model_dir, f"{_VALID_OR_TEST}_preds")
     makedirs(save_preds_dir, exist_ok=True)
 
-    for holdout_source in _DATADEF.source_names:
+    for holdout_source in _DATADEF.domain_names:
         print(">>>>", holdout_source)
         save_preds_path = join(
             model_dir, f"{_VALID_OR_TEST}_preds", f"{holdout_source}.json"
@@ -161,7 +161,7 @@ makedirs(_OUTPUT_SAVE_DIR, exist_ok=True)
 # build tables
 holdout_source_to_table = {}
 fulltable = np.zeros((2, 2))
-for holdout_source in _DATADEF.source_names:
+for holdout_source in _DATADEF.domain_names:
     table = np.zeros((2, 2))
     arch1_preds = load_json(
         join(
@@ -198,7 +198,7 @@ for holdout_source in _DATADEF.source_names:
 
 # mcnemars
 results = {}
-for holdout_source in _DATADEF.source_names:
+for holdout_source in _DATADEF.domain_names:
     table = holdout_source_to_table[holdout_source]
     result = mcnemar(table.T)
     results[holdout_source] = {
@@ -257,7 +257,7 @@ def compute_power(prob_table, dataset_size, alpha=0.05, r=5000):
 
 
 results = {}
-# for holdout_source in _DATADEF.source_names:
+# for holdout_source in _DATADEF.domain_names:
 #     table = holdout_source_to_table[holdout_source]
 #     dataset_size = table.sum()
 #     test_set_size = len(_DATADEF.load_splits_func([holdout_source], ["test"])["test"])
@@ -272,7 +272,7 @@ results = {}
 #     }
 
 full_dataset_size = fulltable.sum()
-test_set_size = len(_DATADEF.load_splits_func(_DATADEF.source_names, ["test"])["test"])
+test_set_size = len(_DATADEF.load_splits_func(_DATADEF.domain_names, ["test"])["test"])
 power, _, _, _ = compute_power(fulltable / full_dataset_size, test_set_size)
 # power_balanced = np.array([v["power"] for v in results.values()]).mean()
 # results["power_balanced"] = power_balanced

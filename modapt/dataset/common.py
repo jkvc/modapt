@@ -5,12 +5,12 @@ from config import DATA_DIR
 from modapt.utils import load_json
 
 
-def calculate_labelprops(samples, n_classes, source_names):
+def calculate_labelprops(samples, n_classes, domain_names):
     source2labelcounts = {
-        source: (np.zeros((n_classes,)) + 1e-8) for source in source_names
+        source: (np.zeros((n_classes,)) + 1e-8) for source in domain_names
     }
     for s in samples:
-        source2labelcounts[source_names[s.source_idx]][s.y_idx] += 1
+        source2labelcounts[domain_names[s.domain_idx]][s.y_idx] += 1
     return {
         source: labelcounts / (labelcounts.sum())
         for source, labelcounts in source2labelcounts.items()

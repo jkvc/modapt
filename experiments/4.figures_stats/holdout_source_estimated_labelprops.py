@@ -77,7 +77,7 @@ def _2fold(samples):
 # load samples, shuffle once, use this seeded shuffle order for all evals
 
 source2samples = {}
-for source in _DATADEF.source_names:
+for source in _DATADEF.domain_names:
     source2samples[source] = _DATADEF.load_splits_func([source], ["train"])["train"]
     _RNG.shuffle(source2samples[source])
 
@@ -89,7 +89,7 @@ if not exists(_LEXICON_MODEL_PERFORMANCE_SAVE_PATH):
     orig_metrics = load_json(join(_LEXICON_MODEL_ROOT, "mean_metrics.json"))
     gt_source2acc = {
         source: orig_metrics[source]["mean"]["valid_f1"]
-        for source in _DATADEF.source_names
+        for source in _DATADEF.domain_names
     }
     gt_source2acc["mean"] = np.array(list(gt_source2acc.values())).mean()
     gt_source2acc["std"] = np.array(list(gt_source2acc.values())).std()
@@ -101,7 +101,7 @@ if not exists(_LEXICON_MODEL_PERFORMANCE_SAVE_PATH):
     )
     notechnique_source2acc = {
         source: notechnique_metrics[source]["mean"]["valid_f1"]
-        for source in _DATADEF.source_names
+        for source in _DATADEF.domain_names
     }
     notechnique_source2acc["mean"] = np.array(
         list(notechnique_source2acc.values())
@@ -118,7 +118,7 @@ if not exists(_LEXICON_MODEL_PERFORMANCE_SAVE_PATH):
     for nsample in _LABELPROPS_ESTIMATE_NSAMPLES:
 
         source2type2accs = defaultdict(lambda: defaultdict(list))
-        for source in _DATADEF.source_names:
+        for source in _DATADEF.domain_names:
             print(">>", source, nsample)
             all_samples = source2samples[source]
             model = torch.load(join(_LEXICON_MODEL_ROOT, source, "model.pth")).to(
@@ -131,7 +131,7 @@ if not exists(_LEXICON_MODEL_PERFORMANCE_SAVE_PATH):
                     "estimated": calculate_labelprops(
                         label_est_samples,
                         _DATADEF.n_classes,
-                        _DATADEF.source_names,
+                        _DATADEF.domain_names,
                     )
                 }
                 datadef = get_datadef(_DATASET_NAME)
@@ -170,7 +170,7 @@ lexicon_model_stats = {}
 for nsample in _LABELPROPS_ESTIMATE_NSAMPLES:
     accs = []
     deltas = []
-    for source in _DATADEF.source_names:
+    for source in _DATADEF.domain_names:
         source_technique_mean = np.array(
             lexicon_model_perf[str(nsample)][source]["full"]
         ).mean()
@@ -192,7 +192,7 @@ if not exists(_ROBERTA_MODEL_PERFORMANCE_SAVE_PATH):
     orig_metrics = load_json(join(_ROBERTA_MODEL_ROOT, "mean_metrics.json"))
     gt_source2acc = {
         source: orig_metrics[source]["mean"]["valid_f1.best"]
-        for source in _DATADEF.source_names
+        for source in _DATADEF.domain_names
     }
     gt_source2acc["mean"] = np.array(list(gt_source2acc.values())).mean()
     gt_source2acc["std"] = np.array(list(gt_source2acc.values())).std()
@@ -204,7 +204,7 @@ if not exists(_ROBERTA_MODEL_PERFORMANCE_SAVE_PATH):
     )
     notechnique_source2acc = {
         source: notechnique_metrics[source]["mean"]["valid_f1.best"]
-        for source in _DATADEF.source_names
+        for source in _DATADEF.domain_names
     }
     notechnique_source2acc["mean"] = np.array(
         list(notechnique_source2acc.values())
@@ -221,7 +221,7 @@ if not exists(_ROBERTA_MODEL_PERFORMANCE_SAVE_PATH):
     for nsample in _LABELPROPS_ESTIMATE_NSAMPLES:
 
         source2type2accs = defaultdict(lambda: defaultdict(list))
-        for source in _DATADEF.source_names:
+        for source in _DATADEF.domain_names:
             print(">>", source, nsample)
 
             model = torch.load(join(_ROBERTA_MODEL_ROOT, source, "checkpoint.pth")).to(
@@ -233,13 +233,13 @@ if not exists(_ROBERTA_MODEL_PERFORMANCE_SAVE_PATH):
                 estimated_labelprops = calculate_labelprops(
                     label_est_samples,
                     _DATADEF.n_classes,
-                    _DATADEF.source_names,
+                    _DATADEF.domain_names,
                 )
                 valid_loader = DataLoader(
                     RobertaDataset(
                         valid_samples,
                         _DATADEF.n_classes,
-                        _DATADEF.source_names,
+                        _DATADEF.domain_names,
                         source2labelprops=estimated_labelprops,
                     ),
                     batch_size=100,
@@ -272,7 +272,7 @@ roberta_model_stats = {}
 for nsample in _LABELPROPS_ESTIMATE_NSAMPLES:
     accs = []
     deltas = []
-    for source in _DATADEF.source_names:
+    for source in _DATADEF.domain_names:
         source_technique_mean = np.array(
             roberta_model_perf[str(nsample)][source]["full"]
         ).mean()
@@ -303,7 +303,7 @@ plt.plot(
         np.array(
             [
                 roberta_model_perf[str(nsample)][source]["full"]
-                for source in _DATADEF.source_names
+                for source in _DATADEF.domain_names
             ]
         ).mean()
         for nsample in _LABELPROPS_ESTIMATE_NSAMPLES
@@ -331,7 +331,7 @@ plt.plot(
         np.array(
             [
                 lexicon_model_perf[str(nsample)][source]["full"]
-                for source in _DATADEF.source_names
+                for source in _DATADEF.domain_names
             ]
         ).mean()
         for nsample in _LABELPROPS_ESTIMATE_NSAMPLES
@@ -442,7 +442,7 @@ def plot_single_source(ax, source):
 
 # each source single image
 
-for source in _DATADEF.source_names:
+for source in _DATADEF.domain_names:
     plt.clf()
     fig, ax = plt.subplots(figsize=(7, 5))
     plot_single_source(ax, source)
@@ -455,10 +455,10 @@ fig, axes = plt.subplots(nrows=_PLOT_NROW, ncols=_PLOT_NCOL, figsize=(16, 16))
 axes = axes.flatten()
 
 for i, ax in enumerate(axes):
-    if i >= len(_DATADEF.source_names):
+    if i >= len(_DATADEF.domain_names):
         plt.delaxes(ax)
     else:
-        source = _DATADEF.source_names[i]
+        source = _DATADEF.domain_names[i]
         print(source)
         plot_single_source(ax, source)
         ax.title.set_text(source)

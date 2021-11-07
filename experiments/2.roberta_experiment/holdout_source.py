@@ -29,10 +29,10 @@ _SAVE_DIR = join(MODELS_DIR, _DATASET_NAME, _EXPERIMENT_NAME, _ARCH)
 
 logdir2datasets = {}
 
-for holdout_source in _DATADEF.source_names:
+for holdout_source in _DATADEF.domain_names:
     print(">>", holdout_source)
 
-    train_sources = [s for s in _DATADEF.source_names if s != holdout_source]
+    train_sources = [s for s in _DATADEF.domain_names if s != holdout_source]
     train_samples = _DATADEF.load_splits_func(train_sources, ["train"])["train"]
     # valid using holdout issue all samples
     valid_samples = _DATADEF.load_splits_func([holdout_source], ["train"])["train"]
@@ -40,13 +40,13 @@ for holdout_source in _DATADEF.source_names:
     train_dataset = RobertaDataset(
         train_samples,
         n_classes=_DATADEF.n_classes,
-        source_names=_DATADEF.source_names,
+        domain_names=_DATADEF.domain_names,
         source2labelprops=_DATADEF.load_labelprops_func("train"),
     )
     valid_dataset = RobertaDataset(
         valid_samples,
         n_classes=_DATADEF.n_classes,
-        source_names=_DATADEF.source_names,
+        domain_names=_DATADEF.domain_names,
         source2labelprops=_DATADEF.load_labelprops_func("train"),
     )
 
@@ -74,7 +74,7 @@ for e in range(_N_TRAIN_EPOCH):
 
 # setup and run test set
 
-for holdout_source in _DATADEF.source_names:
+for holdout_source in _DATADEF.domain_names:
     save_metric_path = join(_SAVE_DIR, holdout_source, "leaf_test.json")
     if exists(save_metric_path):
         print(">> skip test", holdout_source)
@@ -86,7 +86,7 @@ for holdout_source in _DATADEF.source_names:
     test_dataset = RobertaDataset(
         test_samples,
         n_classes=_DATADEF.n_classes,
-        source_names=_DATADEF.source_names,
+        domain_names=_DATADEF.domain_names,
         source2labelprops=_DATADEF.load_labelprops_func("test"),
     )
 

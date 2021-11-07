@@ -6,5 +6,5 @@ class DataSample:
     id: str
     text: str
     y_idx: int
-    source_name: str
-    source_idx: int
+    domain_name: str
+    domain_idx: int

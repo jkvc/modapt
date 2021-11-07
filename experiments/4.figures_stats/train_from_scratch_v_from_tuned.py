@@ -40,7 +40,7 @@ def load_metrics(model_root):
     metrics = load_json(join(model_root, "mean_metrics.json"))
     for nsample in ROBERTA_ADAPT_N_SAMPLES:
         accs = []
-        for source in _DATADEF.source_names:
+        for source in _DATADEF.domain_names:
             accs.append(
                 metrics[f"{nsample:04}_samples"][source]["mean"]["valid_f1.best"]
             )
@@ -60,7 +60,7 @@ holdout_source_metrics = load_json(join(_HOLDOUT_SOUCE_MODEL_ROOT, "mean_metrics
 holdout_source_acc = np.array(
     [
         holdout_source_metrics[source]["mean"]["valid_f1.best"]
-        for source in _DATADEF.source_names
+        for source in _DATADEF.domain_names
     ]
 ).mean()
 
@@ -77,7 +77,7 @@ plt.plot(
 )
 # for nsample in ROBERTA_ADAPT_N_SAMPLES:
 #     plt.scatter(
-#         np.ones((len(_DATADEF.source_names),)) * nsample,
+#         np.ones((len(_DATADEF.domain_names),)) * nsample,
 #         holdout_adapt_nsample2accs[nsample],
 #         edgecolors="teal",
 #         facecolors="none",
@@ -100,7 +100,7 @@ plt.plot(
 )
 # for nsample in ROBERTA_ADAPT_N_SAMPLES:
 #     plt.scatter(
-#         np.ones((len(_DATADEF.source_names),)) * nsample,
+#         np.ones((len(_DATADEF.domain_names),)) * nsample,
 #         from_scratch_nsample2accs[nsample],
 #         edgecolors="chocolate",
 #         facecolors="none",

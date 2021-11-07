@@ -22,7 +22,7 @@ class RobertaDataset(Dataset):
         self,
         samples: List[DataSample],
         n_classes: int,
-        source_names: List[str],
+        domain_names: List[str],
         source2labelprops: Optional[Dict[str, np.array]] = None,
     ):
         self.samples: List[DataSample] = samples
@@ -32,7 +32,7 @@ class RobertaDataset(Dataset):
         else:
             # estimate labelprops in given samples
             self.source2labelprops = calculate_labelprops(
-                samples, n_classes, source_names
+                samples, n_classes, domain_names
             )
 
         self.tokenizer = None
@@ -58,8 +58,8 @@ class RobertaDataset(Dataset):
             "id": sample.id,
             "x": x,
             "y": sample.y_idx,
-            "labelprops": self.source2labelprops[sample.source_name],
-            "source_idx": sample.source_idx,
+            "labelprops": self.source2labelprops[sample.domain_name],
+            "domain_idx": sample.domain_idx,
         }
 
 

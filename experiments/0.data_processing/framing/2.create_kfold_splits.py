@@ -7,7 +7,7 @@ from config import DATA_DIR, KFOLD, RANDOM_SEED
 from experiments.datadef import zoo
 from modapt.utils import load_json, save_json
 
-ISSUES = zoo.get_datadef("framing").source_names
+ISSUES = zoo.get_datadef("framing").domain_names
 
 RNG = Random()
 RNG.seed(RANDOM_SEED)

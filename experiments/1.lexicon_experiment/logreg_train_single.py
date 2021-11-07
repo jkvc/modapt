@@ -33,10 +33,10 @@ for arch, config in _ARCH2CONFIG.items():
 
     savedir = join(_SAVE_ROOT, arch)
 
-    for train_source in _DATADEF.source_names:
+    for train_source in _DATADEF.domain_names:
         print(">>", train_source)
 
-        holdout_sources = [s for s in _DATADEF.source_names if s != train_source]
+        holdout_sources = [s for s in _DATADEF.domain_names if s != train_source]
 
         train_samples = _DATADEF.load_splits_func([train_source], ["train"])["train"]
         # valid using holdout issue all samples

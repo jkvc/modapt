@@ -80,12 +80,12 @@ class RobertaClassifier(nn.Module):
         if hasattr(self, "use_learned_residual") and self.use_learned_residual:
             if self.training:
                 batchsize = len(labels)
-                source_idx = batch["source_idx"].to(AUTO_DEVICE)
+                domain_idx = batch["domain_idx"].to(AUTO_DEVICE)
                 source_onehot = torch.FloatTensor(batchsize, self.n_sources).to(
                     AUTO_DEVICE
                 )
                 source_onehot.zero_()
-                source_onehot.scatter_(1, source_idx.unsqueeze(-1), 1)
+                source_onehot.scatter_(1, domain_idx.unsqueeze(-1), 1)
                 c = self.cff(source_onehot)
                 logits = logits + c
 
@@ -95,7 +95,7 @@ class RobertaClassifier(nn.Module):
             if self.training:
                 confound_logits = self.cout(e)
                 confound_loss, _ = calc_multiclass_loss(
-                    confound_logits, batch["source_idx"].to(AUTO_DEVICE), "multinomial"
+                    confound_logits, batch["domain_idx"].to(AUTO_DEVICE), "multinomial"
                 )
                 loss = loss + confound_loss
 

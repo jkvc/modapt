@@ -30,9 +30,9 @@ for reg in _L1_REG_CANDIDATES:
     config = {**_CONFIG}
     config["reg"] = reg  # override
 
-    for holdout_source in _DATADEF.source_names:
+    for holdout_source in _DATADEF.domain_names:
         print(">>", holdout_source, reg)
-        train_sources = [s for s in _DATADEF.source_names if s != holdout_source]
+        train_sources = [s for s in _DATADEF.domain_names if s != holdout_source]
         train_samples = _DATADEF.load_splits_func(train_sources, ["train"])["train"]
         valid_samples = _DATADEF.load_splits_func(train_sources, ["valid"])["valid"]
 

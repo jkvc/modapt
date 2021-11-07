@@ -74,7 +74,7 @@ class LogisticRegressionModel(nn.Module):
         if self.use_learned_residualization:
             if self.training:
                 source_onehot = (
-                    torch.eye(self.n_sources)[batch["source_idx"]]
+                    torch.eye(self.n_sources)[batch["domain_idx"]]
                     .to(AUTO_DEVICE)
                     .to(torch.float)
                 )
@@ -88,7 +88,7 @@ class LogisticRegressionModel(nn.Module):
             if self.training:
                 confound_logits = self.cout(e)
                 confound_loss, _ = calc_multiclass_loss(
-                    confound_logits, batch["source_idx"].to(AUTO_DEVICE), "multinomial"
+                    confound_logits, batch["domain_idx"].to(AUTO_DEVICE), "multinomial"
                 )
                 loss = loss + confound_loss
 

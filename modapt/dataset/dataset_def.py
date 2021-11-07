@@ -7,7 +7,7 @@ from modapt.dataset.data_sample import DataSample
 
 @dataclass
 class DatasetDefinition:
-    source_names: List[str]
+    domain_names: List[str]
     label_names: List[str]
     load_splits_func: Callable[[List[str], List[str]], Dict[str, List[DataSample]]]
     load_labelprops_func: Callable[[str], Dict[str, np.array]]
@@ -16,5 +16,5 @@ class DatasetDefinition:
     n_classes: int = field(init=False)
 
     def __post_init__(self) -> None:
-        self.n_sources = len(self.source_names)
+        self.n_sources = len(self.domain_names)
         self.n_classes = len(self.label_names)

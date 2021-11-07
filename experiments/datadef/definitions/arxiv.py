@@ -52,8 +52,8 @@ def load_all_arxiv_abstract_samples(
                     id=id,
                     text=raw_data[id]["abstract"],
                     y_idx=year2yidx(raw_data[id]["year"]),
-                    source_name=c,
-                    source_idx=ARXIV_CATEGORY2IDX[c],
+                    domain_name=c,
+                    domain_idx=ARXIV_CATEGORY2IDX[c],
                 )
             )
     return samples
@@ -84,7 +84,7 @@ def load_labelprops(split):
 register_datadef(
     "arxiv",
     DatasetDefinition(
-        source_names=ARXIV_CATEGORIES,
+        domain_names=ARXIV_CATEGORIES,
         label_names=YEARRANGE_NAMES,
         load_splits_func=load_splits,
         load_labelprops_func=load_labelprops,

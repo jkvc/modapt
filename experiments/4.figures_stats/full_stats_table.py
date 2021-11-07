@@ -60,7 +60,7 @@ def get_valid_accs(metrics):
                 metrics[source]["mean"].get("valid_f1", 0),
                 metrics[source]["mean"].get("valid_f1.best", 0),
             )
-            for source in _DATADEF.source_names
+            for source in _DATADEF.domain_names
         ]
     )
 
@@ -82,7 +82,7 @@ for datasetname in _DATASETS:
     lexicon_base_accs = np.array(
         [
             lexicon_metrics[_LEXICON_BASE_ARCH][source]["mean"]["valid_f1"]
-            for source in _DATADEF.source_names
+            for source in _DATADEF.domain_names
         ]
     )
     rows[_LEXICON_BASE_ARCH] = {
@@ -93,7 +93,7 @@ for datasetname in _DATASETS:
         accs = np.array(
             [
                 lexicon_metrics[arch][source]["mean"]["valid_f1"]
-                for source in _DATADEF.source_names
+                for source in _DATADEF.domain_names
             ]
         )
         delta = accs - lexicon_base_accs

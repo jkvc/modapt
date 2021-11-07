@@ -25,7 +25,7 @@ _SAVE_DIR = join(LEXICON_DIR, _DATASET_NAME, "holdout_source", "vader")
 
 _ANALYZER = SentimentIntensityAnalyzer()
 
-for holdout_source in _DATADEF.source_names:
+for holdout_source in _DATADEF.domain_names:
     print(">>", holdout_source)
     logdir = join(_SAVE_DIR, holdout_source)
     makedirs(logdir, exist_ok=True)

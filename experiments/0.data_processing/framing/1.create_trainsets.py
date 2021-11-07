@@ -6,7 +6,7 @@ from experiments.datadef import zoo
 from modapt.utils import load_json, save_json
 
 FRAMING_DATA_DIR = join(DATA_DIR, "framing_labeled")
-ISSUES = zoo.get_datadef("framing").source_names
+ISSUES = zoo.get_datadef("framing").domain_names
 
 
 if __name__ == "__main__":

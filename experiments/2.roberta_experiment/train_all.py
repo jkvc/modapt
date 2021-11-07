@@ -27,14 +27,14 @@ _EXPERIMENT_NAME = basename(_SCRIPT_PATH).replace(".py", "")
 _SAVE_DIR = join(MODELS_DIR, _DATASET_NAME, _EXPERIMENT_NAME, _ARCH)
 
 
-train_sources = _DATADEF.source_names
+train_sources = _DATADEF.domain_names
 train_samples = _DATADEF.load_splits_func(train_sources, ["train"])["train"]
 
 
 train_dataset = RobertaDataset(
     train_samples,
     n_classes=_DATADEF.n_classes,
-    source_names=_DATADEF.source_names,
+    domain_names=_DATADEF.domain_names,
     source2labelprops=_DATADEF.load_labelprops_func("train"),
 )
 valid_dataset = train_dataset
@@ -63,7 +63,7 @@ for e in range(_N_TRAIN_EPOCH):
 checkpointpath = join(_SAVE_DIR, "checkpoint.pth")
 model = torch.load(checkpointpath).to(AUTO_DEVICE)
 
-for source in _DATADEF.source_names:
+for source in _DATADEF.domain_names:
     makedirs(join(_SAVE_DIR, source))
     save_metric_path = join(_SAVE_DIR, source, "leaf_test.json")
     if exists(save_metric_path):
@@ -76,7 +76,7 @@ for source in _DATADEF.source_names:
     test_dataset = RobertaDataset(
         test_samples,
         n_classes=_DATADEF.n_classes,
-        source_names=_DATADEF.source_names,
+        domain_names=_DATADEF.domain_names,
         source2labelprops=_DATADEF.load_labelprops_func("test"),
     )
 

@@ -31,12 +31,12 @@ _RNG.seed(RANDOM_SEED)
 
 logdir2datasets = {}
 
-for train_source in _DATADEF.source_names:
+for train_source in _DATADEF.domain_names:
     print(">>", train_source)
 
     train_samples = _DATADEF.load_splits_func([train_source], ["train"])["train"]
 
-    valid_sources = [s for s in _DATADEF.source_names if s != train_source]
+    valid_sources = [s for s in _DATADEF.domain_names if s != train_source]
     sourcename2validsamples = {
         sourcename: _DATADEF.load_splits_func([sourcename], ["train"])["train"]
         for sourcename in valid_sources
@@ -46,21 +46,21 @@ for train_source in _DATADEF.source_names:
     )
     print(n_valid_samples_per_source)
     valid_samples = []
-    for source_name in valid_sources:
-        all_samples_from_source = sourcename2validsamples[source_name]
+    for domain_name in valid_sources:
+        all_samples_from_source = sourcename2validsamples[domain_name]
         _RNG.shuffle(all_samples_from_source)
         valid_samples.extend(all_samples_from_source[:n_valid_samples_per_source])
 
     train_dataset = RobertaDataset(
         train_samples,
         n_classes=_DATADEF.n_classes,
-        source_names=_DATADEF.source_names,
+        domain_names=_DATADEF.domain_names,
         source2labelprops=_DATADEF.load_labelprops_func("train"),
     )
     valid_dataset = RobertaDataset(
         valid_samples,
         n_classes=_DATADEF.n_classes,
-        source_names=_DATADEF.source_names,
+        domain_names=_DATADEF.domain_names,
         source2labelprops=_DATADEF.load_labelprops_func("train"),
     )
 
@@ -88,7 +88,7 @@ for e in range(_N_TRAIN_EPOCH):
 
 # setup and run test set
 
-for train_source in _DATADEF.source_names:
+for train_source in _DATADEF.domain_names:
     save_metric_path = join(_SAVE_DIR, train_source, "leaf_test.json")
     if exists(save_metric_path):
         print(">> skip test", train_source)
@@ -96,12 +96,12 @@ for train_source in _DATADEF.source_names:
     else:
         print(">> test except", train_source)
 
-    test_sources = [s for s in _DATADEF.source_names if s != train_source]
+    test_sources = [s for s in _DATADEF.domain_names if s != train_source]
     test_samples = _DATADEF.load_splits_func(test_sources, ["test"])["test"]
     test_dataset = RobertaDataset(
         test_samples,
         n_classes=_DATADEF.n_classes,
-        source_names=_DATADEF.source_names,
+        domain_names=_DATADEF.domain_names,
         source2labelprops=_DATADEF.load_labelprops_func("test"),
     )
 

@@ -56,8 +56,8 @@ def load_sentiment_samples(sources: List[str], split: str) -> List[DataSample]:
                     id=id,
                     text=raw_data[id]["text"],
                     y_idx=polarity2idx(raw_data[id]["polarity"]),
-                    source_name=source,
-                    source_idx=SENTIMENT_SOURCE2IDX[source],
+                    domain_name=source,
+                    domain_idx=SENTIMENT_SOURCE2IDX[source],
                 )
             )
     return samples
@@ -72,7 +72,7 @@ def load_splits(
 register_datadef(
     "sentiment",
     DatasetDefinition(
-        source_names=SENTIMENT_SOURCES,
+        domain_names=SENTIMENT_SOURCES,
         label_names=POLARITY_NAMES,
         load_splits_func=load_splits,
         load_labelprops_func=load_labelprops,

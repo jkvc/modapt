@@ -78,25 +78,25 @@ def build_bow_full_batch(
 
     # normalize word freq within each issue
     if use_source_individual_norm:
-        source_idxs = set(sample.source_idx for sample in samples)
-        for source_idx in source_idxs:
+        domain_idxs = set(sample.domain_idx for sample in samples)
+        for domain_idx in domain_idxs:
             idxs = [
-                i for i, sample in enumerate(samples) if sample.source_idx == source_idx
+                i for i, sample in enumerate(samples) if sample.domain_idx == domain_idx
             ]
             if len(idxs) == 0:
                 continue
             X[idxs] -= X[idxs].mean(axis=0)
 
     source2labelprops = datadef.load_labelprops_func(labelprop_split)
-    labelprops = torch.FloatTensor([source2labelprops[s.source_name] for s in samples])
+    labelprops = torch.FloatTensor([source2labelprops[s.domain_name] for s in samples])
 
-    source_idx = torch.LongTensor([s.source_idx for s in samples])
+    domain_idx = torch.LongTensor([s.domain_idx for s in samples])
 
     batch = {
         "x": torch.FloatTensor(X),
         "y": torch.LongTensor(y),
         "labelprops": labelprops,
-        "source_idx": source_idx.to(torch.long),
+        "domain_idx": domain_idx.to(torch.long),
     }
     for k in batch:
         batch[k] = batch[k].to(AUTO_DEVICE)

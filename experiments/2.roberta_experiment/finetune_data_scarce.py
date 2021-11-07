@@ -35,7 +35,7 @@ _RNG = Random()
 logdir2datasets, logdir2checkpointpath = {}, {}
 
 
-for adapt_source in _DATADEF.source_names:
+for adapt_source in _DATADEF.domain_names:
     split2samples = _DATADEF.load_splits_func([adapt_source], ["train", "valid"])
     train_samples, valid_samples = split2samples["train"], split2samples["valid"]
 
@@ -47,13 +47,13 @@ for adapt_source in _DATADEF.source_names:
         train_dataset = RobertaDataset(
             selected_train_samples,
             n_classes=_DATADEF.n_classes,
-            source_names=_DATADEF.source_names,
+            domain_names=_DATADEF.domain_names,
             source2labelprops=_DATADEF.load_labelprops_func("train"),
         )
         valid_dataset = RobertaDataset(
             valid_samples,
             n_classes=_DATADEF.n_classes,
-            source_names=_DATADEF.source_names,
+            domain_names=_DATADEF.domain_names,
             source2labelprops=_DATADEF.load_labelprops_func("valid"),
         )
 

@@ -41,7 +41,7 @@ vocab_size = len(vocab)
 lexicon_df = pd.read_csv(join(stock_lexicon_dir, "lexicon.csv"))
 print(lexicon_df)
 
-for holdout_source in _DATADEF.source_names:
+for holdout_source in _DATADEF.domain_names:
     print(">>", holdout_source)
     logdir = join(_SAVE_DIR, holdout_source)
     makedirs(logdir, exist_ok=True)

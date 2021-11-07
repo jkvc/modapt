@@ -92,8 +92,8 @@ def load_all_framing_samples(
                     id=id,
                     text=remove_framing_text_headings(raw_data[id]["text"]),
                     y_idx=code_to_yidx(raw_data[id][task], task),
-                    source_name=issue,
-                    source_idx=ISSUE2IIDX[issue],
+                    domain_name=issue,
+                    domain_idx=ISSUE2IIDX[issue],
                 )
             )
     return samples
@@ -153,7 +153,7 @@ def load_labelprops(split, task):
 register_datadef(
     "framing",
     DatasetDefinition(
-        source_names=ISSUES,
+        domain_names=ISSUES,
         label_names=PRIMARY_FRAME_NAMES,
         load_splits_func=lambda issues, splits: load_splits(
             issues,
@@ -167,7 +167,7 @@ register_datadef(
 register_datadef(
     "framing_tone",
     DatasetDefinition(
-        source_names=ISSUES,
+        domain_names=ISSUES,
         label_names=PRIMARY_TONE_NAMES,
         load_splits_func=lambda issues, splits: load_splits(
             issues,
