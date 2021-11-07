@@ -3,8 +3,7 @@ import pickle
 import shutil
 from multiprocessing import Pool, cpu_count
 from os import mkdir
-from os.path import join
-from typing import Iterable, List, Tuple
+from typing import List
 
 import matplotlib.pyplot as plt
 import torch
@@ -12,7 +11,7 @@ from config import FIGURE_DPI
 from genericpath import exists
 from tqdm import tqdm
 
-DEVICE = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+AUTO_DEVICE = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
 
 def read_txt_as_str_list(filepath: str) -> List[str]:

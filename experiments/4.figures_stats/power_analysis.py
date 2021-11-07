@@ -18,7 +18,7 @@ from modapt.model.logreg_config.grid_search import (
     load_logreg_model_config_all_archs,
 )
 from modapt.utils import (
-    DEVICE,
+    AUTO_DEVICE,
     load_json,
     read_txt_as_str_list,
     save_json,
@@ -76,7 +76,7 @@ def valid_roberta_model(arch):
         )
 
         checkpoint_path = join(model_dir, holdout_source, "checkpoint.pth")
-        model = torch.load(checkpoint_path).to(DEVICE)
+        model = torch.load(checkpoint_path).to(AUTO_DEVICE)
         model.eval()
 
         id2results = {}

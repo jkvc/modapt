@@ -1,14 +1,12 @@
 from os import makedirs
 from os.path import join
 
-from modapt.dataset.amazon.definition import (
+from modapt.datadef.definitions.amazon import (
     CATEGORIES,
     LABELPROPS_DIR,
     RATING_N_CLASSES,
 )
-from modapt.dataset.amazon.samples import (
-    load_all_amazon_review_samples,
-)
+from modapt.dataset.amazon.samples import load_all_amazon_review_samples
 from modapt.dataset.common import calculate_labelprops
 from modapt.utils import save_json
 

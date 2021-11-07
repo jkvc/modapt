@@ -13,7 +13,7 @@ from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 from transformers import AdamW
 
-from modapt.utils import DEVICE, save_json
+from modapt.utils import AUTO_DEVICE, save_json
 
 N_DATALOADER_WORKER = 6
 TRAIN_BATCHSIZE = 50
@@ -61,7 +61,7 @@ def train(
                 num_workers=n_dataloader_worker,
             )
 
-    model = model.to(DEVICE)
+    model = model.to(AUTO_DEVICE)
     optimizer = AdamW(model.parameters(), lr=1e-5)
 
     writer = SummaryWriter(logdir)
@@ -291,7 +291,7 @@ def calc_f1(all_logits, all_labels):
 #         if train_dataset
 #         else None
 #     )
-#     model = model.to(DEVICE)
+#     model = model.to(AUTO_DEVICE)
 
 #     name0loaders = [("valid", valid_loader)]
 #     if train_loader:
@@ -306,7 +306,7 @@ def calc_f1(all_logits, all_labels):
 #             total_loss = 0
 #             for i, batch in enumerate(tqdm(dataloader, desc=splitname)):
 #                 xs, ys, _ = batch
-#                 xs, ys = xs.to(DEVICE), ys.to(DEVICE)
+#                 xs, ys = xs.to(AUTO_DEVICE), ys.to(AUTO_DEVICE)
 #                 outputs = model(xs)
 #                 loss = F.cross_entropy(outputs.logits, ys, reduction="sum")
 #                 total_loss += loss

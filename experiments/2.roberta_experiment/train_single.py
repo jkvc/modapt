@@ -12,7 +12,7 @@ from modapt.eval import reduce_and_save_metrics
 from modapt.experiments import run_experiments
 from modapt.learning import do_valid
 from modapt.model.roberta_config.base import load_roberta_model_config
-from modapt.utils import DEVICE, save_json
+from modapt.utils import AUTO_DEVICE, save_json
 
 _DATASET_NAME = sys.argv[1]
 _N_TRAIN_EPOCH = int(sys.argv[2])
@@ -106,7 +106,7 @@ for train_source in _DATADEF.source_names:
     )
 
     checkpointpath = join(_SAVE_DIR, train_source, "checkpoint.pth")
-    model = torch.load(checkpointpath).to(DEVICE)
+    model = torch.load(checkpointpath).to(AUTO_DEVICE)
     test_metrics = do_valid(model, test_dataset)
 
     save_json(test_metrics, save_metric_path)

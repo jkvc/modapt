@@ -17,7 +17,7 @@ from modapt.model.logreg_config.base import (
     load_stock_lexicon_logreg_model_config,
 )
 from modapt.utils import (
-    DEVICE,
+    AUTO_DEVICE,
     read_txt_as_str_list,
     save_json,
     write_str_list_as_txt,
@@ -64,7 +64,7 @@ for holdout_source in _DATADEF.source_names:
             n_sources=_DATADEF.n_sources,
             vocab_size=len(vocab),
         )
-        model = get_model(config).to(DEVICE)
+        model = get_model(config).to(AUTO_DEVICE)
         model.set_weight_from_lexicon(lexicon_df, _DATADEF.label_names)
 
         use_source_individual_norm = config["use_source_individual_norm"]

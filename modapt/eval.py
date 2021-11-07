@@ -16,13 +16,13 @@ from tqdm import tqdm
 from transformers import AdamW, AutoModelForSequenceClassification
 
 from modapt.learning import valid_epoch
-from modapt.utils import DEVICE, load_json, save_json
+from modapt.utils import AUTO_DEVICE, load_json, save_json
 
 # def do_valid_model(pretrained_model_dir):
 #     valid_config = load_json(join(pretrained_model_dir, "valid_config.json"))
 
 #     model = AutoModelForSequenceClassification.from_pretrained(pretrained_model_dir).to(
-#         DEVICE
+#         AUTO_DEVICE
 #     )
 #     kfold_datasets = get_kfold_primary_frames_datasets(
 #         issues=valid_config["issues"], k=valid_config["kfold"]

@@ -13,7 +13,7 @@ from modapt.dataset.bow_dataset import (
 from modapt.learning import calc_f1, print_metrics
 from modapt.model import get_model
 from modapt.utils import (
-    DEVICE,
+    AUTO_DEVICE,
     read_txt_as_str_list,
     save_json,
     write_str_list_as_txt,
@@ -104,7 +104,7 @@ def run_lexicon_experiment(
     if exists(complete_marker_path):
         return
 
-    model = get_model(config).to(DEVICE)
+    model = get_model(config).to(AUTO_DEVICE)
     makedirs(logdir, exist_ok=True)
 
     use_source_individual_norm = config["use_source_individual_norm"]

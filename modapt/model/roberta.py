@@ -8,7 +8,7 @@ from modapt.model.common import (
 )
 from modapt.model.model_utils import ReversalLayer
 from modapt.model.zoo import register_model
-from modapt.utils import DEVICE
+from modapt.utils import AUTO_DEVICE
 from transformers import RobertaModel
 
 ROBERAT_EMB_SIZE = 768
@@ -60,8 +60,8 @@ class RobertaClassifier(nn.Module):
         )
 
     def forward(self, batch):
-        x = batch["x"].to(DEVICE)
-        labels = batch["y"].to(DEVICE)
+        x = batch["x"].to(AUTO_DEVICE)
+        labels = batch["y"].to(AUTO_DEVICE)
 
         x = self.roberta(x)[0]
 
@@ -73,15 +73,17 @@ class RobertaClassifier(nn.Module):
 
         if hasattr(self, "use_log_labelprop_bias") and self.use_log_labelprop_bias:
             labelprops = (
-                batch["labelprops"].to(DEVICE).to(torch.float)
+                batch["labelprops"].to(AUTO_DEVICE).to(torch.float)
             )  # nsample, nclass
             logits = logits + torch.log(labelprops)
 
         if hasattr(self, "use_learned_residual") and self.use_learned_residual:
             if self.training:
                 batchsize = len(labels)
-                source_idx = batch["source_idx"].to(DEVICE)
-                source_onehot = torch.FloatTensor(batchsize, self.n_sources).to(DEVICE)
+                source_idx = batch["source_idx"].to(AUTO_DEVICE)
+                source_onehot = torch.FloatTensor(batchsize, self.n_sources).to(
+                    AUTO_DEVICE
+                )
                 source_onehot.zero_()
                 source_onehot.scatter_(1, source_idx.unsqueeze(-1), 1)
                 c = self.cff(source_onehot)
@@ -93,7 +95,7 @@ class RobertaClassifier(nn.Module):
             if self.training:
                 confound_logits = self.cout(e)
                 confound_loss, _ = calc_multiclass_loss(
-                    confound_logits, batch["source_idx"].to(DEVICE), "multinomial"
+                    confound_logits, batch["source_idx"].to(AUTO_DEVICE), "multinomial"
                 )
                 loss = loss + confound_loss
 

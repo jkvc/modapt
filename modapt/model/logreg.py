@@ -10,7 +10,7 @@ from modapt.model.common import (
 )
 from modapt.model.model_utils import ReversalLayer
 from modapt.model.zoo import register_model
-from modapt.utils import DEVICE
+from modapt.utils import AUTO_DEVICE
 
 
 def elicit_lexicon(
@@ -58,7 +58,7 @@ class LogisticRegressionModel(nn.Module):
         )
 
     def forward(self, batch):
-        x = batch["x"].to(DEVICE).to(torch.float)  # nsample, vocabsize
+        x = batch["x"].to(AUTO_DEVICE).to(torch.float)  # nsample, vocabsize
         nsample, vocabsize = x.shape
         assert vocabsize == self.vocab_size
 
@@ -67,7 +67,7 @@ class LogisticRegressionModel(nn.Module):
 
         if self.use_log_labelprop_bias:
             labelprops = (
-                batch["labelprops"].to(DEVICE).to(torch.float)
+                batch["labelprops"].to(AUTO_DEVICE).to(torch.float)
             )  # nsample, nclass
             logits = logits + torch.log(labelprops)
 
@@ -75,20 +75,20 @@ class LogisticRegressionModel(nn.Module):
             if self.training:
                 source_onehot = (
                     torch.eye(self.n_sources)[batch["source_idx"]]
-                    .to(DEVICE)
+                    .to(AUTO_DEVICE)
                     .to(torch.float)
                 )
                 clogits = self.cff(source_onehot)
                 logits = clogits + logits
 
-        labels = batch["y"].to(DEVICE)
+        labels = batch["y"].to(AUTO_DEVICE)
         loss, labels = calc_multiclass_loss(logits, labels, self.multiclass_strategy)
 
         if self.use_gradient_reversal:
             if self.training:
                 confound_logits = self.cout(e)
                 confound_loss, _ = calc_multiclass_loss(
-                    confound_logits, batch["source_idx"].to(DEVICE), "multinomial"
+                    confound_logits, batch["source_idx"].to(AUTO_DEVICE), "multinomial"
                 )
                 loss = loss + confound_loss
 
@@ -143,7 +143,7 @@ class LogisticRegressionSingularWeightMatrixModel(nn.Module):
             self.bias = nn.Parameter(torch.tensor([0.5, 0.5]))
 
     def forward(self, batch):
-        x = batch["x"].to(DEVICE).to(torch.float)  # nsample, vocabsize
+        x = batch["x"].to(AUTO_DEVICE).to(torch.float)  # nsample, vocabsize
         nsample, vocabsize = x.shape
         assert vocabsize == self.vocab_size
 
@@ -151,14 +151,14 @@ class LogisticRegressionSingularWeightMatrixModel(nn.Module):
 
         if self.use_log_labelprop_bias:
             labelprops = (
-                batch["labelprops"].to(DEVICE).to(torch.float)
+                batch["labelprops"].to(AUTO_DEVICE).to(torch.float)
             )  # nsample, nclass
             logits = logits + torch.log(labelprops)
 
         if self.use_adaptive_bias:
             logits = logits + self.bias
 
-        labels = batch["y"].to(DEVICE)
+        labels = batch["y"].to(AUTO_DEVICE)
         loss, labels = calc_multiclass_loss(logits, labels, self.multiclass_strategy)
 
         # l1 reg on t weights only TODO enable

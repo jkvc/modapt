@@ -20,7 +20,7 @@ from modapt.model.logreg_config.grid_search import (
     load_logreg_model_config_all_archs,
 )
 from modapt.utils import (
-    DEVICE,
+    AUTO_DEVICE,
     load_json,
     read_txt_as_str_list,
     save_json,
@@ -122,7 +122,7 @@ if not exists(_LEXICON_MODEL_PERFORMANCE_SAVE_PATH):
             print(">>", source, nsample)
             all_samples = source2samples[source]
             model = torch.load(join(_LEXICON_MODEL_ROOT, source, "model.pth")).to(
-                DEVICE
+                AUTO_DEVICE
             )
             vocab = read_txt_as_str_list(join(_LEXICON_MODEL_ROOT, source, "vocab.txt"))
 
@@ -225,7 +225,7 @@ if not exists(_ROBERTA_MODEL_PERFORMANCE_SAVE_PATH):
             print(">>", source, nsample)
 
             model = torch.load(join(_ROBERTA_MODEL_ROOT, source, "checkpoint.pth")).to(
-                DEVICE
+                AUTO_DEVICE
             )
             all_samples = source2samples[source]
 
