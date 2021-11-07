@@ -1,0 +1,9 @@
+config.py
+
+data/
+output/
+models/
+lexicon/
+stock_lexicon/
+.vscode
+__pycache__

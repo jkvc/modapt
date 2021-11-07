@@ -1,0 +1,1 @@
+these scripts preprocess stock lexicons in `STOCK_LEXICON_DIR/<lexicon_name>/raw` into well-defined, configured models and save in `STOCK_LEXICON_DIR/<lexicon_name>/processed`

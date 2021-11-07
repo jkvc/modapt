@@ -1,0 +1,27 @@
+from os.path import dirname, join, realpath
+
+REPO_ROOT = dirname(realpath(__file__))
+
+DATA_DIR = join(REPO_ROOT, "data")
+OUTPUT_DIR = join(REPO_ROOT, "output")
+FIGURES_DIR = join(OUTPUT_DIR, "figures")
+STOCK_LEXICON_DIR = join(REPO_ROOT, "stock_lexicon")
+
+# MODELS_DIR = join(REPO_ROOT, "models")
+# LEXICON_DIR = join(REPO_ROOT, "lexicon")
+
+MODELS_DIR = "/juice/scr/jkc1/models"  # cluster
+LEXICON_DIR = "/juice/scr/jkc1/lexicon"  # cluster
+
+
+RANDOM_SEED = 0xDEADBEEF
+
+
+KFOLD = 8
+FOLDS_TO_RUN = [0, 1, 2]
+# FOLDS_TO_RUN = [0, 1, 2, 3, 4, 5, 6, 7]
+
+BATCHSIZE = 25
+ROBERTA_ADAPT_N_SAMPLES = [125, 250, 500, 1000]
+
+FIGURE_DPI = 100

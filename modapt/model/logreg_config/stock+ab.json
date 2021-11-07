@@ -1,0 +1,12 @@
+{
+    "arch": "LogisticRegressionSingularWeightMatrixModel",
+    "multiclass_strategy": "multinomial",
+    "use_source_individual_norm": false,
+    "use_log_labelprop_bias": false,
+    "use_adaptive_bias": true,
+    "vocab_size": null,
+    "n_classes": null,
+    "n_sources": null,
+    "use_lemmatize": false,
+    "reg": 1e-4
+}
