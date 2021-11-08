@@ -58,6 +58,8 @@ def logreg_train(
     train_samples = datadef.load_splits_func(datadef.domain_names, ["train"])["default"]
     vocab, all_tokens = build_vocab(train_samples, vocab_size, use_lemmatize)
 
+    print(f">> training logreg model with {len(train_samples)} samples")
+
     model, train_metrics = train_lexicon_model(
         model,
         datadef,
@@ -97,10 +99,44 @@ def logreg_predict_eval(
         df_unlabeled, nclasses=datadef_labeled.n_classes
     )
 
-    # estimate acc
+    # labeled samples
     labeled_samples = datadef_labeled.load_splits_func(
         datadef_labeled.domain_names, [""]
     )["default"]
+
+    # unlabeled samples use labelprops calculated from all labeled samples
+    estimated_labelprops = {
+        "estimated": calculate_labelprops(
+            labeled_samples,
+            datadef_labeled.n_classes,
+            datadef_labeled.domain_names,
+        )
+    }
+    datadef_unlabeled.load_labelprops_func = lambda _split: estimated_labelprops[_split]
+    unlabeled_samples = datadef_unlabeled.load_splits_func(
+        datadef_unlabeled.domain_names, [""]
+    )["default"]
+
+    # do prediction
+    print(f">> running prediction on {len(unlabeled_samples)} unlabeled samples")
+    batch = build_bow_full_batch(
+        samples=unlabeled_samples,
+        datadef=datadef_unlabeled,
+        all_tokens=get_all_tokens(
+            unlabeled_samples, use_lemmatize=config["use_lemmatize"]
+        ),
+        vocab=vocab,
+        use_source_individual_norm=config["use_source_individual_norm"],
+        labelprop_split="estimated",
+    )
+    model.eval()
+    with torch.no_grad():
+        outputs = model(batch)
+    logits = outputs["logits"]
+    scores = F.softmax(logits, dim=-1).detach().cpu().numpy()
+
+    # estimate acc
+    print(f">> estimating accuracy using {len(labeled_samples)} labeled samples")
     halfsize = len(labeled_samples) // 2
     firsthalf, secondhalf = labeled_samples[:halfsize], labeled_samples[halfsize:]
     accs = []
@@ -131,36 +167,7 @@ def logreg_predict_eval(
             use_lemmatize=config["use_lemmatize"],
         )
         accs.append(metrics["valid_f1"])
-
     est_acc = sum(accs) / len(accs)
-
-    # do prediction
-    estimated_labelprops = {
-        "estimated": calculate_labelprops(
-            labeled_samples,
-            datadef_labeled.n_classes,
-            datadef_labeled.domain_names,
-        )
-    }
-    datadef_unlabeled.load_labelprops_func = lambda _split: estimated_labelprops[_split]
-    unlabeled_samples = datadef_unlabeled.load_splits_func(
-        datadef_unlabeled.domain_names, [""]
-    )["default"]
-    batch = build_bow_full_batch(
-        samples=unlabeled_samples,
-        datadef=datadef_unlabeled,
-        all_tokens=get_all_tokens(
-            unlabeled_samples, use_lemmatize=config["use_lemmatize"]
-        ),
-        vocab=vocab,
-        use_source_individual_norm=config["use_source_individual_norm"],
-        labelprop_split="estimated",
-    )
-    model.eval()
-    with torch.no_grad():
-        outputs = model(batch)
-    logits = outputs["logits"]
-    scores = F.softmax(logits, dim=-1).detach().cpu().numpy()
 
     return scores, est_acc
 
