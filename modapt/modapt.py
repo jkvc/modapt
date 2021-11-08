@@ -85,7 +85,7 @@ def logreg_predict_eval(
     data_labeled: Union[str, pd.DataFrame],
     data_unlabeled: Union[str, pd.DataFrame],
     model_dir: str,
-) -> Tuple[np.array, Dict[str, float]]:
+) -> Tuple[np.array, float]:
     model = torch.load(join(model_dir, "model.pth"))
     vocab = read_txt_as_str_list(join(model_dir, "vocab.txt"))
     config = load_json(join(model_dir, "config.json"))
@@ -132,10 +132,7 @@ def logreg_predict_eval(
         )
         accs.append(metrics["valid_f1"])
 
-    est_metrics = {
-        "mean_estimated_acc": sum(accs) / len(accs),
-        "estimated_accs": accs,
-    }
+    est_acc = sum(accs) / len(accs)
 
     # do prediction
     estimated_labelprops = {
@@ -165,7 +162,7 @@ def logreg_predict_eval(
     logits = outputs["logits"]
     scores = F.softmax(logits, dim=-1).detach().cpu().numpy()
 
-    return scores, est_metrics
+    return scores, est_acc
 
 
 def roberta_train(
