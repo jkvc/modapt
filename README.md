@@ -1,23 +1,9 @@
-# media-frame-transformer
+# Modular Domain Adaptation
 
-```
-conda create -n <ENV> python=3.9
-conda activate <ENV>
-pip install torchvision transformers pandas
+## setup
 
-# cd to repo root
-conda develop .
-mkdir data models
-```
+PyPI coming
 
-## data
+## develop
 
 todo
-
-## config
-
-todo
-
-## run
-
-just run numbered scripts in order 
