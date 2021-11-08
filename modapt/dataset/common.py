@@ -1,10 +1,11 @@
 from os.path import dirname, exists, join
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
 from config import DATA_DIR
 from modapt.dataset.data_sample import DataSample
+from modapt.dataset.dataset_def import DatasetDefinition
 from modapt.utils import load_json
 
 
@@ -42,10 +43,12 @@ def to_df(samples: List[DataSample]) -> pd.DataFrame:
     return df
 
 
-def from_df(df: pd.DataFrame) -> List[DataSample]:
+def from_df(df: pd.DataFrame) -> DatasetDefinition:
     ds = df.to_dict("records")
-    domains = {d["domain_name"] for d in ds}
-    domain2idx = {d: i for i, d in enumerate(domains)}
+
+    domain_names = list({d["domain_name"] for d in ds})
+    domain2idx = {d: i for i, d in enumerate(domain_names)}
+    nclasses = max({d["y_idx"] for d in ds}) + 1
 
     l = [
         DataSample(
@@ -57,4 +60,26 @@ def from_df(df: pd.DataFrame) -> List[DataSample]:
         )
         for i, d in enumerate(ds)
     ]
-    return l
+    domain2samples = {}
+    for sample in l:
+        if sample.domain_name not in domain2samples:
+            domain2samples[sample.domain_name] = []
+        domain2samples[sample.domain_name].append(sample)
+    domain2labelprops = calculate_labelprops(l, nclasses, domain_names)
+
+    def _load_splits_func(domains, _):
+        samples = []
+        for d in domains:
+            samples.extend(domain2samples[d])
+        return {"default": samples}
+
+    def _load_labelprops_func(_):
+        return domain2labelprops
+
+    datadef = DatasetDefinition(
+        domain_names=domain_names,
+        label_names=[str(i) for i in range(nclasses)],
+        load_splits_func=_load_splits_func,
+        load_labelprops_func=_load_labelprops_func,
+    )
+    return datadef

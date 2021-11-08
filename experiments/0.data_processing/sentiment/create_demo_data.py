@@ -12,7 +12,7 @@ from modapt.dataset.common import to_df
 _DATADEF = get_datadef("sentiment")
 _SAVEDIR = sys.argv[1]
 
-_NSAMPLE_PER_DOMAIN = 50
+_NSAMPLE_PER_DOMAIN = 100
 
 _RNG = Random(RANDOM_SEED)
 _TRAIN_DOMAINS = ["airline", "imdb", "senti140", "sst"]
@@ -32,6 +32,6 @@ train_df.to_csv(join(_SAVEDIR, "train.csv"))
 
 valid_samples = _DATADEF.load_splits_func([_VALID_DOMAIN], ["train"])["train"]
 _RNG.shuffle(valid_samples)
-valid_samples = valid_samples[:10]
+valid_samples = valid_samples[:_NSAMPLE_PER_DOMAIN]
 valid_df = to_df(valid_samples)
 valid_df.to_csv(join(_SAVEDIR, "valid.csv"))
