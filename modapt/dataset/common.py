@@ -43,7 +43,9 @@ def to_df(samples: List[DataSample]) -> pd.DataFrame:
     return df
 
 
-def from_df(df: pd.DataFrame) -> DatasetDefinition:
+def from_labeled_df(df: pd.DataFrame) -> DatasetDefinition:
+    assert "y_idx" in df.columns
+
     ds = df.to_dict("records")
 
     domain_names = list({d["domain_name"] for d in ds})
@@ -65,6 +67,7 @@ def from_df(df: pd.DataFrame) -> DatasetDefinition:
         if sample.domain_name not in domain2samples:
             domain2samples[sample.domain_name] = []
         domain2samples[sample.domain_name].append(sample)
+
     domain2labelprops = calculate_labelprops(l, nclasses, domain_names)
 
     def _load_splits_func(domains, _):
@@ -75,6 +78,46 @@ def from_df(df: pd.DataFrame) -> DatasetDefinition:
 
     def _load_labelprops_func(_):
         return domain2labelprops
+
+    datadef = DatasetDefinition(
+        domain_names=domain_names,
+        label_names=[str(i) for i in range(nclasses)],
+        load_splits_func=_load_splits_func,
+        load_labelprops_func=_load_labelprops_func,
+    )
+    return datadef
+
+
+def from_unlabeled_df(df: pd.DataFrame, nclasses: int) -> DatasetDefinition:
+    ds = df.to_dict("records")
+
+    domain_names = list({d["domain_name"] for d in ds})
+    domain2idx = {d: i for i, d in enumerate(domain_names)}
+
+    l = [
+        DataSample(
+            id=i,
+            text=d["text"],
+            y_idx=None,
+            domain_name=d["domain_name"],
+            domain_idx=domain2idx[d["domain_name"]],
+        )
+        for i, d in enumerate(ds)
+    ]
+    domain2samples = {}
+    for sample in l:
+        if sample.domain_name not in domain2samples:
+            domain2samples[sample.domain_name] = []
+        domain2samples[sample.domain_name].append(sample)
+
+    def _load_splits_func(domains, _):
+        samples = []
+        for d in domains:
+            samples.extend(domain2samples[d])
+        return {"default": samples}
+
+    def _load_labelprops_func(_):
+        raise NotImplementedError("load_labelprops on dataset without labels")
 
     datadef = DatasetDefinition(
         domain_names=domain_names,
