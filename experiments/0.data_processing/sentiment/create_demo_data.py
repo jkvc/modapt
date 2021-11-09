@@ -40,7 +40,7 @@ valid_labeled_df = to_df(valid_labeled_samples)
 valid_labeled_df.to_csv(join(_SAVEDIR, "valid_labeled.csv"))
 
 _RNG.shuffle(valid_samples)
-valid_unlabeled_samples = valid_samples[:_N_VALID_LABELED]
+valid_unlabeled_samples = valid_samples[:_N_VALID_UNLABELED]
 valid_unlabeled_df = to_df(valid_unlabeled_samples)
 valid_unlabeled_df = valid_unlabeled_df.drop("y_idx", 1)
 valid_unlabeled_df.to_csv(join(_SAVEDIR, "valid_unlabeled.csv"))

@@ -2,10 +2,7 @@ from typing import Any, Dict
 
 import torch
 import torch.nn as nn
-from modapt.model.common import (
-    MULTICLASS_STRATEGY,
-    calc_multiclass_loss,
-)
+from modapt.model.common import MULTICLASS_STRATEGY, calc_multiclass_loss
 from modapt.model.model_utils import ReversalLayer
 from modapt.model.zoo import register_model
 from modapt.utils import AUTO_DEVICE
@@ -89,17 +86,24 @@ class RobertaClassifier(nn.Module):
                 c = self.cff(source_onehot)
                 logits = logits + c
 
-        loss, labels = calc_multiclass_loss(logits, labels, self.multiclass_strategy)
+        do_calculate_loss = (labels >= 0).all()
+        if do_calculate_loss:
+            loss, labels = calc_multiclass_loss(
+                logits, labels, self.multiclass_strategy
+            )
+            if self.use_gradient_reversal:
+                if self.training:
+                    confound_logits = self.cout(e)
+                    confound_loss, _ = calc_multiclass_loss(
+                        confound_logits,
+                        batch["domain_idx"].to(AUTO_DEVICE),
+                        "multinomial",
+                    )
+                    loss = loss + confound_loss
+            loss = loss.mean()
+        else:
+            loss = -1
 
-        if self.use_gradient_reversal:
-            if self.training:
-                confound_logits = self.cout(e)
-                confound_loss, _ = calc_multiclass_loss(
-                    confound_logits, batch["domain_idx"].to(AUTO_DEVICE), "multinomial"
-                )
-                loss = loss + confound_loss
-
-        loss = loss.mean()
         return {
             "logits": logits,
             "loss": loss,

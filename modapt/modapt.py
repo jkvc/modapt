@@ -7,6 +7,8 @@ import pandas as pd
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.utils.data.dataloader import DataLoader
+from tqdm import tqdm
 
 from modapt.dataset.bow_dataset import build_bow_full_batch, build_vocab, get_all_tokens
 from modapt.dataset.common import (
@@ -15,9 +17,17 @@ from modapt.dataset.common import (
     from_unlabeled_df,
 )
 from modapt.dataset.dataset_def import DatasetDefinition
-from modapt.learning import TRAIN_BATCHSIZE
+from modapt.dataset.roberta_dataset import RobertaDataset
+from modapt.learning import (
+    N_DATALOADER_WORKER,
+    TRAIN_BATCHSIZE,
+    VALID_BATCHSIZE,
+    do_valid,
+    train,
+)
 from modapt.lexicon import eval_lexicon_model, train_lexicon_model
 from modapt.model.logreg_config.grid_search import load_logreg_model_config_all_archs
+from modapt.model.roberta_config.base import load_roberta_model_config
 from modapt.model.zoo import get_model
 from modapt.utils import (
     AUTO_DEVICE,
@@ -59,7 +69,6 @@ def logreg_train(
     vocab, all_tokens = build_vocab(train_samples, vocab_size, use_lemmatize)
 
     print(f">> training logreg model with {len(train_samples)} samples")
-
     model, train_metrics = train_lexicon_model(
         model,
         datadef,
@@ -74,10 +83,8 @@ def logreg_train(
     write_str_list_as_txt(vocab, join(save_model_dir, "vocab.txt"))
     torch.save(model, join(save_model_dir, "model.pth"))
     save_json(train_metrics, join(save_model_dir, "train_metrics.json"))
-
     df = model.get_weighted_lexicon(vocab, datadef.label_names)
     df.to_csv(join(save_model_dir, "lexicon.csv"), index=False)
-
     save_json(config, join(save_model_dir, "config.json"))
 
     return model, vocab, train_metrics
@@ -173,17 +180,138 @@ def logreg_predict_eval(
 
 
 def roberta_train(
-    data: Union[str, pd.DataFrame],
+    train_data: Union[str, pd.DataFrame],
+    valid_data: Union[str, pd.DataFrame],
     save_model_dir: str,
     arch: str = "roberta+kb",
-    n_epoch: int = 6,
+    max_epochs: int = 6,
     batchsize: int = TRAIN_BATCHSIZE,
 ) -> Tuple[nn.Module, Dict[str, any]]:
-    pass
+    train_df = _get_data_df(train_data)
+    train_datadef = from_labeled_df(train_df)
+    valid_df = _get_data_df(valid_data)
+    valid_datadef = from_labeled_df(valid_df)
+
+    config = load_roberta_model_config(
+        arch, train_datadef.n_classes, train_datadef.n_sources
+    )
+
+    train_samples = train_datadef.load_splits_func(
+        train_datadef.domain_names, ["train"]
+    )["default"]
+    train_dataset = RobertaDataset(
+        train_samples,
+        n_classes=train_datadef.n_classes,
+        domain_names=train_datadef.domain_names,
+        source2labelprops=train_datadef.load_labelprops_func("train"),
+    )
+    valid_samples = valid_datadef.load_splits_func(
+        valid_datadef.domain_names, ["valid"]
+    )["default"]
+    valid_dataset = RobertaDataset(
+        valid_samples,
+        n_classes=valid_datadef.n_classes,
+        domain_names=valid_datadef.domain_names,
+        source2labelprops=valid_datadef.load_labelprops_func("valid"),
+    )
+
+    makedirs(save_model_dir, exist_ok=True)
+    model = get_model(config)
+
+    print(f">> training roberta model with {len(train_samples)} train samples")
+    print(f">>         early stopping with {len(valid_samples)} valid samples")
+    metrics = train(
+        model=model,
+        train_dataset=train_dataset,
+        valid_dataset=valid_dataset,
+        logdir=save_model_dir,
+        max_epochs=max_epochs,
+        num_early_stop_non_improve_epoch=max_epochs,
+        batchsize=batchsize,
+    )
+
+    save_json(config, join(save_model_dir, "config.json"))
+    return model, metrics
 
 
-def roberta_eval(
-    data: Union[str, pd.DataFrame],
+def roberta_predict_eval(
+    data_labeled: Union[str, pd.DataFrame],
+    data_unlabeled: Union[str, pd.DataFrame],
     model_dir: str,
-) -> Tuple[np.array, np.array, Dict[str, any]]:
-    pass
+) -> Tuple[np.array, float]:
+    model = torch.load(join(model_dir, "checkpoint.pth"))
+
+    df_labeled = _get_data_df(data_labeled)
+    datadef_labeled = from_labeled_df(df_labeled)
+    df_unlabeled = _get_data_df(data_unlabeled)
+    datadef_unlabeled = from_unlabeled_df(
+        df_unlabeled, nclasses=datadef_labeled.n_classes
+    )
+
+    # labeled samples
+    labeled_samples = datadef_labeled.load_splits_func(
+        datadef_labeled.domain_names, [""]
+    )["default"]
+
+    # unlabeled samples use labelprops calculated from all labeled samples
+    estimated_labelprops = {
+        "estimated": calculate_labelprops(
+            labeled_samples,
+            datadef_labeled.n_classes,
+            datadef_labeled.domain_names,
+        )
+    }
+    datadef_unlabeled.load_labelprops_func = lambda _split: estimated_labelprops[_split]
+    unlabeled_samples = datadef_unlabeled.load_splits_func(
+        datadef_unlabeled.domain_names, [""]
+    )["default"]
+
+    # do prediction
+    print(f">> running prediction on {len(unlabeled_samples)} unlabeled samples")
+    full_unlabeled_dataset = RobertaDataset(
+        samples=unlabeled_samples,
+        n_classes=datadef_labeled.n_classes,
+        domain_names=datadef_labeled.domain_names,
+        source2labelprops=datadef_labeled.load_labelprops_func("estimated"),
+    )
+    full_unlabeled_loader = DataLoader(
+        full_unlabeled_dataset,
+        batch_size=VALID_BATCHSIZE,
+        shuffle=False,
+        num_workers=N_DATALOADER_WORKER,
+    )
+    model.eval()
+    all_scores = []
+    with torch.no_grad():
+        for i, batch in enumerate(tqdm(full_unlabeled_loader)):
+            outputs = model(batch)
+            logits = outputs["logits"]
+            scores = F.softmax(logits, dim=-1).detach().cpu().numpy()
+            all_scores.append(scores)
+    all_scores = np.concatenate(all_scores, axis=0)
+
+    # estimate acc
+    print(f">> estimating accuracy using {len(labeled_samples)} labeled samples")
+    print(f">> estimating accuracy using {len(labeled_samples)} labeled samples")
+    halfsize = len(labeled_samples) // 2
+    firsthalf, secondhalf = labeled_samples[:halfsize], labeled_samples[halfsize:]
+    accs = []
+    for labelprop_est_samples, valid_samples in [
+        (firsthalf, secondhalf),
+        (secondhalf, firsthalf),
+    ]:
+        half_labeled_dataset = RobertaDataset(
+            samples=valid_samples,
+            n_classes=datadef_labeled.n_classes,
+            domain_names=datadef_labeled.domain_names,
+            source2labelprops=calculate_labelprops(
+                labelprop_est_samples,
+                datadef_labeled.n_classes,
+                datadef_labeled.domain_names,
+            ),
+        )
+        metrics = do_valid(model, half_labeled_dataset)
+        accs.append(metrics["f1"])
+    est_acc = sum(accs) / len(accs)
+
+    return scores, est_acc

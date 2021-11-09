@@ -4,10 +4,7 @@ from typing import Dict, List, Optional
 
 import numpy as np
 from config import DATA_DIR
-from modapt.dataset.common import (
-    calculate_labelprops,
-    get_labelprops_full_split,
-)
+from modapt.dataset.common import calculate_labelprops, get_labelprops_full_split
 from modapt.dataset.data_sample import DataSample
 from modapt.utils import load_json, save_json
 from torch.utils.data import Dataset
@@ -57,7 +54,7 @@ class RobertaDataset(Dataset):
         return {
             "id": sample.id,
             "x": x,
-            "y": sample.y_idx,
+            "y": sample.y_idx if sample.y_idx is not None else -1,
             "labelprops": self.source2labelprops[sample.domain_name],
             "domain_idx": sample.domain_idx,
         }

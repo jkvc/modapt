@@ -1,10 +1,11 @@
 from collections import defaultdict
 from os.path import exists, join
 from pprint import pprint
-from typing import Dict
+from typing import Dict, Tuple
 
 import numpy as np
 import torch
+import torch.nn as nn
 from numpy.lib.function_base import iterable
 from sklearn.metrics import f1_score, precision_score, recall_score
 from torch.nn import functional as F
@@ -16,7 +17,7 @@ from transformers import AdamW
 from modapt.utils import AUTO_DEVICE, save_json
 
 N_DATALOADER_WORKER = 6
-TRAIN_BATCHSIZE = 50
+TRAIN_BATCHSIZE = 25
 MAX_EPOCH = 30
 NUM_EARLY_STOP_NON_IMPROVE_EPOCH = 3
 VALID_BATCHSIZE = 150
@@ -36,7 +37,7 @@ def train(
     keep_latest=False,
     skip_train_zeroth_epoch=False,
     valid_every_n_epoch=1,
-):
+) -> Dict[str, float]:
 
     train_loader = DataLoader(
         train_dataset,
@@ -130,6 +131,7 @@ def train(
         print(">> end epoch", e, "\n")
 
     writer.close()
+    return metrics
 
 
 def do_valid(model, dataset):
