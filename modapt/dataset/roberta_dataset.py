@@ -4,11 +4,12 @@ from typing import Dict, List, Optional
 
 import numpy as np
 from config import DATA_DIR
-from modapt.dataset.common import calculate_labelprops, get_labelprops_full_split
-from modapt.dataset.data_sample import DataSample
-from modapt.utils import load_json, save_json
 from torch.utils.data import Dataset
 from transformers import RobertaTokenizerFast
+
+from ..utils import load_json, save_json
+from .common import calculate_labelprops, get_labelprops_full_split
+from .data_sample import DataSample
 
 INPUT_N_TOKEN = 512
 PAD_TOK_IDX = 1

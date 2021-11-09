@@ -2,7 +2,8 @@ MULTICLASS_STRATEGY = ["multinomial", "ovr"]
 
 import torch
 import torch.nn.functional as F
-from modapt.utils import AUTO_DEVICE
+
+from ..utils import AUTO_DEVICE
 
 
 def calc_multiclass_loss(logits, labels, multiclass_strategy):

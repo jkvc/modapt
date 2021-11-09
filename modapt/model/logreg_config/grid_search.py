@@ -1,6 +1,6 @@
 import itertools
 
-from modapt.model.logreg_config.base import load_logreg_model_config
+from .base import load_logreg_model_config
 
 _LOGREG_ARCH_PREFIX = "logreg"
 _CONFIG_OVERRIDES = [

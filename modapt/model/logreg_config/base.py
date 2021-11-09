@@ -1,6 +1,6 @@
 from os.path import dirname, exists, join, realpath
 
-from modapt.utils import load_json
+from ...utils import load_json
 
 VOCAB_SIZE = 5000
 

@@ -15,8 +15,8 @@ from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 from transformers import AdamW, AutoModelForSequenceClassification
 
-from modapt.learning import valid_epoch
-from modapt.utils import AUTO_DEVICE, load_json, save_json
+from .learning import valid_epoch
+from .utils import AUTO_DEVICE, load_json, save_json
 
 # def do_valid_model(pretrained_model_dir):
 #     valid_config = load_json(join(pretrained_model_dir, "valid_config.json"))

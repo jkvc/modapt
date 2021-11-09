@@ -4,9 +4,9 @@ from pprint import pprint
 
 import torch
 
-from modapt.learning import train
-from modapt.model import get_model
-from modapt.utils import mkdir_overwrite, write_str_list_as_txt
+from .learning import train
+from .model import get_model
+from .utils import mkdir_overwrite, write_str_list_as_txt
 
 
 def run_experiments(

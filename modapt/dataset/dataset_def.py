@@ -2,7 +2,8 @@ from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List
 
 import numpy as np
-from modapt.dataset.data_sample import DataSample
+
+from .data_sample import DataSample
 
 
 @dataclass

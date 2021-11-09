@@ -2,11 +2,12 @@ from typing import Any, Dict
 
 import torch
 import torch.nn as nn
-from modapt.model.common import MULTICLASS_STRATEGY, calc_multiclass_loss
-from modapt.model.model_utils import ReversalLayer
-from modapt.model.zoo import register_model
-from modapt.utils import AUTO_DEVICE
 from transformers import RobertaModel
+
+from ..utils import AUTO_DEVICE
+from .common import MULTICLASS_STRATEGY, calc_multiclass_loss
+from .model_utils import ReversalLayer
+from .zoo import register_model
 
 ROBERAT_EMB_SIZE = 768
 

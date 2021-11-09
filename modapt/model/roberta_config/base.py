@@ -1,6 +1,6 @@
 from os.path import dirname, exists, join, realpath
 
-from modapt.utils import load_json
+from ...utils import load_json
 
 _roberta_config_dir = dirname(realpath(__file__))
 

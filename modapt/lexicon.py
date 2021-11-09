@@ -5,19 +5,10 @@ import torch
 from torch.optim import SGD
 from tqdm import trange
 
-from modapt.dataset.bow_dataset import (
-    build_bow_full_batch,
-    build_vocab,
-    get_all_tokens,
-)
-from modapt.learning import calc_f1, print_metrics
-from modapt.model import get_model
-from modapt.utils import (
-    AUTO_DEVICE,
-    read_txt_as_str_list,
-    save_json,
-    write_str_list_as_txt,
-)
+from .dataset.bow_dataset import build_bow_full_batch, build_vocab, get_all_tokens
+from .learning import calc_f1, print_metrics
+from .model import get_model
+from .utils import AUTO_DEVICE, read_txt_as_str_list, save_json, write_str_list_as_txt
 
 
 def train_lexicon_model(

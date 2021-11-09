@@ -14,7 +14,7 @@ from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 from transformers import AdamW
 
-from modapt.utils import AUTO_DEVICE, save_json
+from .utils import AUTO_DEVICE, save_json
 
 N_DATALOADER_WORKER = 6
 TRAIN_BATCHSIZE = 25

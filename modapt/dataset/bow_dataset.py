@@ -5,12 +5,13 @@ from typing import Dict, List, Tuple
 import nltk
 import numpy as np
 import torch
-from modapt.dataset.data_sample import DataSample
-from modapt.dataset.dataset_def import DatasetDefinition
-from modapt.utils import AUTO_DEVICE
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from tqdm import tqdm
+
+from ..utils import AUTO_DEVICE
+from .data_sample import DataSample
+from .dataset_def import DatasetDefinition
 
 
 def get_tokens(cleaned_text: str) -> List[str]:

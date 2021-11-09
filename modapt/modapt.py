@@ -10,26 +10,22 @@ import torch.nn.functional as F
 from torch.utils.data.dataloader import DataLoader
 from tqdm import tqdm
 
-from modapt.dataset.bow_dataset import build_bow_full_batch, build_vocab, get_all_tokens
-from modapt.dataset.common import (
-    calculate_labelprops,
-    from_labeled_df,
-    from_unlabeled_df,
-)
-from modapt.dataset.dataset_def import DatasetDefinition
-from modapt.dataset.roberta_dataset import RobertaDataset
-from modapt.learning import (
+from .dataset.bow_dataset import build_bow_full_batch, build_vocab, get_all_tokens
+from .dataset.common import calculate_labelprops, from_labeled_df, from_unlabeled_df
+from .dataset.dataset_def import DatasetDefinition
+from .dataset.roberta_dataset import RobertaDataset
+from .learning import (
     N_DATALOADER_WORKER,
     TRAIN_BATCHSIZE,
     VALID_BATCHSIZE,
     do_valid,
     train,
 )
-from modapt.lexicon import eval_lexicon_model, train_lexicon_model
-from modapt.model.logreg_config.grid_search import load_logreg_model_config_all_archs
-from modapt.model.roberta_config.base import load_roberta_model_config
-from modapt.model.zoo import get_model
-from modapt.utils import (
+from .lexicon import eval_lexicon_model, train_lexicon_model
+from .model.logreg_config.grid_search import load_logreg_model_config_all_archs
+from .model.roberta_config.base import load_roberta_model_config
+from .model.zoo import get_model
+from .utils import (
     AUTO_DEVICE,
     load_json,
     read_txt_as_str_list,
