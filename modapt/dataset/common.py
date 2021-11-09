@@ -3,7 +3,6 @@ from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
-from config import DATA_DIR
 
 from ..utils import load_json
 from .data_sample import DataSample

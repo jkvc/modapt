@@ -8,7 +8,6 @@ from pprint import pprint
 
 import pandas as pd
 import torch
-from config import MODELS_DIR
 from torch.nn import functional as F
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
@@ -125,9 +124,3 @@ def reduce_and_save_metrics(
     # pprint(tree)
 
     save_tree(rootdir, tree, save_filename)
-
-
-if __name__ == "__main__":
-    exp_dir = join(MODELS_DIR, "1.1.roberta_half.best")
-    eval_all_leaves(exp_dir)
-    reduce_and_save_metrics(exp_dir)

@@ -7,11 +7,12 @@ from typing import List
 
 import matplotlib.pyplot as plt
 import torch
-from config import FIGURE_DPI
 from genericpath import exists
 from tqdm import tqdm
 
 AUTO_DEVICE = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+
+FIGURE_DPI = 300
 
 
 def read_txt_as_str_list(filepath: str) -> List[str]:

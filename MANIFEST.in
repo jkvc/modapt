@@ -1,0 +1,2 @@
+include modapt/model/logreg_config/*.json
+include modapt/model/roberta_config/*.json

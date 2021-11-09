@@ -19,3 +19,17 @@ modapt/model/logreg.py
 modapt/model/model_utils.py
 modapt/model/roberta.py
 modapt/model/zoo.py
+modapt/model/logreg_config/base.py
+modapt/model/logreg_config/grid_search.py
+modapt/model/logreg_config/logreg.json
+modapt/model/logreg_config/stock+ab.json
+modapt/model/logreg_config/stock+kb.json
+modapt/model/logreg_config/stock+sn+kb.json
+modapt/model/logreg_config/stock.json
+modapt/model/roberta_config/base.py
+modapt/model/roberta_config/roberta+gr.json
+modapt/model/roberta_config/roberta+kb+gr.json
+modapt/model/roberta_config/roberta+kb.json
+modapt/model/roberta_config/roberta+lr+gr.json
+modapt/model/roberta_config/roberta+lr.json
+modapt/model/roberta_config/roberta.json

@@ -3,7 +3,6 @@ from os.path import dirname, exists, join
 from typing import Dict, List, Optional
 
 import numpy as np
-from config import DATA_DIR
 from torch.utils.data import Dataset
 from transformers import RobertaTokenizerFast
 
