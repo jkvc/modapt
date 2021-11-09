@@ -10,13 +10,14 @@ setup(
         "modapt.model.roberta_config",
     ],
     include_package_data=True,
-    version="0.4",  # update for new ver
+    package_data={"": ["**/*.json"]},
+    version="0.5",  # update for new ver
     license="MIT",
     description="Modular Domain Adaptation, https://github.com/jkvc/modapt",
     author="jkvc",
     author_email="kevinehc@gmail.com",
     url="https://github.com/jkvc/modapt",
-    download_url="https://github.com/jkvc/modapt/archive/refs/tags/v_04.tar.gz",  # update for new ver
+    download_url="https://github.com/jkvc/modapt/archive/refs/tags/v_05.tar.gz",  # update for new ver
     keywords=["modapt", "modular", "domain", "adaptation"],
     install_requires=[
         "pandas",
