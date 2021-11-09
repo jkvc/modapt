@@ -2,14 +2,18 @@ from distutils.core import setup
 
 setup(
     name="modapt",
-    packages=["modapt"],
-    version="0.2",  # update for new ver
+    packages=[
+        "modapt",
+        "modapt.dataset",
+        "modapt/model",
+    ],
+    version="0.3",  # update for new ver
     license="MIT",
     description="Modular Domain Adaptation, https://github.com/jkvc/modapt",
     author="jkvc",
     author_email="kevinehc@gmail.com",
     url="https://github.com/jkvc/modapt",
-    download_url="https://github.com/jkvc/modapt/archive/refs/tags/v_02.tar.gz",  # update for new ver
+    download_url="https://github.com/jkvc/modapt/archive/refs/tags/v_03.tar.gz",  # update for new ver
     keywords=["modapt", "modular", "domain", "adaptation"],
     install_requires=[
         "pandas",
