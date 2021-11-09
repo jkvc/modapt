@@ -54,6 +54,18 @@ def logreg_train(
     arch: str = "logreg+sn+kb",
     vocab_size: int = 5000,
 ) -> Tuple[nn.Module, List[str], Dict[str, float]]:
+    """train a logistic regression model from bag-of-word features
+
+    Args:
+        data (Union[str, pd.DataFrame]): dataframe or path to dataframe of training data,
+            see `dataset.common.from_labeled_df` for format
+        save_model_dir (str): dirname to save model
+        arch (str, optional): model architecture, see `model.logreg_config.grid_search`. Defaults to "logreg+sn+kb".
+        vocab_size (int, optional): vocab size. Defaults to 5000.
+
+    Returns:
+        Tuple[nn.Module, List[str], Dict[str, float]]: model, vocab list, metrics
+    """
     df = _get_data_df(data)
     datadef = from_labeled_df(df)
 
@@ -95,6 +107,18 @@ def logreg_predict_eval(
     data_unlabeled: Union[str, pd.DataFrame],
     model_dir: str,
 ) -> Tuple[np.array, float]:
+    """predict using a trained logreg model, and estimate its performance
+
+    Args:
+        data_labeled (Union[str, pd.DataFrame]): dataframe or path to csv of labeled data for performance estimation,
+            see `dataset.common.from_labeled_df`
+        data_unlabeled (Union[str, pd.DataFrame]): dataframe or path to csv of unlabeled data,
+            see `dataset.common.from_unlabeled_df`
+        model_dir (str): path to directory of saved model
+
+    Returns:
+        Tuple[np.array, float]: scores, estimated accuracy
+    """
     model = torch.load(join(model_dir, "model.pth"))
     vocab = read_txt_as_str_list(join(model_dir, "vocab.txt"))
     config = load_json(join(model_dir, "config.json"))
@@ -187,6 +211,22 @@ def roberta_train(
     max_epochs: int = 6,
     batchsize: int = TRAIN_BATCHSIZE,
 ) -> Tuple[nn.Module, Dict[str, any]]:
+    """train a roberta model from hugginface public checkpoint
+
+    Args:
+        train_data (Union[str, pd.DataFrame]): dataframe or path to dataframe of training data,
+            see `dataset.common.from_labeled_df` for format
+        valid_data (Union[str, pd.DataFrame]): dataframe or path to dataframe of validation data, used for early-stopping,
+            see `dataset.common.from_labeled_df` for format
+        save_model_dir (str): dirname to save model
+        arch (str, optional): model architecture, see `model.roberta_config`. Defaults to "roberta+kb".
+        max_epochs (int, optional): train at most this many epoch if no early stop. Defaults to 6.
+        batchsize (int, optional): batchsize. Defaults to TRAIN_BATCHSIZE.
+
+    Returns:
+        Tuple[nn.Module, Dict[str, any]]: model, metrics
+    """
+
     train_df = _get_data_df(train_data)
     train_datadef = from_labeled_df(train_df)
     valid_df = _get_data_df(valid_data)
@@ -239,6 +279,18 @@ def roberta_predict_eval(
     data_unlabeled: Union[str, pd.DataFrame],
     model_dir: str,
 ) -> Tuple[np.array, float]:
+    """predict using a trained roberta model, and estimate its performance
+
+    Args:
+        data_labeled (Union[str, pd.DataFrame]): dataframe or path to csv of labeled data for performance estimation,
+            see `dataset.common.from_labeled_df`
+        data_unlabeled (Union[str, pd.DataFrame]): dataframe or path to csv of unlabeled data,
+            see `dataset.common.from_unlabeled_df`
+        model_dir (str): path to directory of saved model
+
+    Returns:
+        Tuple[np.array, float]: scores, estimated accuracy
+    """
     model = torch.load(join(model_dir, "checkpoint.pth"))
 
     df_labeled = _get_data_df(data_labeled)

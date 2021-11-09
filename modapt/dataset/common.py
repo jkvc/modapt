@@ -33,9 +33,9 @@ def get_labelprops_full_split(labelprops_dir, split):
 def to_df(samples: List[DataSample]) -> pd.DataFrame:
     l = [
         {
-            "text": sample.text,
-            "y_idx": sample.y_idx,
             "domain_name": sample.domain_name,
+            "y_idx": sample.y_idx,
+            "text": sample.text,
         }
         for sample in samples
     ]
@@ -44,6 +44,17 @@ def to_df(samples: List[DataSample]) -> pd.DataFrame:
 
 
 def from_labeled_df(df: pd.DataFrame) -> DatasetDefinition:
+    """convert a dataframe of labeled samples to a proper dataset definition
+
+    Args:
+        df (pd.DataFrame): dataframe of labeled samples, must contain the following columns
+            - text
+            - y_idx
+            - domain_name
+
+    Returns:
+        DatasetDefinition: the populated dataset definition
+    """
     assert "y_idx" in df.columns
 
     ds = df.to_dict("records")
@@ -89,6 +100,16 @@ def from_labeled_df(df: pd.DataFrame) -> DatasetDefinition:
 
 
 def from_unlabeled_df(df: pd.DataFrame, nclasses: int) -> DatasetDefinition:
+    """convert a dataframe of unlabeled samples to a proper dataset definition
+
+    Args:
+        df (pd.DataFrame): dataframe of labeled samples, must contain the following columns
+            - text
+            - domain_name
+
+    Returns:
+        DatasetDefinition: the populated dataset definition
+    """
     ds = df.to_dict("records")
 
     domain_names = list({d["domain_name"] for d in ds})
