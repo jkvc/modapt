@@ -98,11 +98,11 @@ def stylize_model_arch_for_figures(arch: str) -> str:
     name = "+".join(toks)
     name = name.replace("roberta", "RoBERTa")
     name = name.replace("logreg", "LogReg")
-    name = name.replace("+KB", "+DSB")
-    name = name.replace("+SN", "+DSN")
+    name = name.replace("+KB", "+DsBias")
+    name = name.replace("+SN", "+DsNorm")
     return name
 
 
 def save_plt(path: str):
-    plt.subplots_adjust(left=0.1, right=0.95, top=0.95, bottom=0.1)
+    # plt.subplots_adjust(left=0.1, right=0.95, top=0.95, bottom=0.1)
     plt.savefig(path, dpi=FIGURE_DPI)

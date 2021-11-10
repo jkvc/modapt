@@ -112,3 +112,53 @@ plt.legend()
 plt.xlabel("# Samples for adaptation")
 plt.ylabel("Holdout source accuracy")
 save_plt(_PLOT_SAVE_PATH)
+
+
+# plt.clf()
+# plt.figure(figsize=(6, 3.5))
+
+# bax = brokenaxes(xlims=((0, 1100),), ylims=((0.52, 0.54), (0.595, 0.62)), hspace=0.2)
+# bax.plot(
+#     ROBERTA_ADAPT_N_SAMPLES,
+#     [holdout_adapt_nsample2acc[nsample] for nsample in ROBERTA_ADAPT_N_SAMPLES],
+#     marker="D",
+#     c="teal",
+#     label=f"Fine-tuned from pretrained",
+# )
+# # for nsample in ROBERTA_ADAPT_N_SAMPLES:
+# #     plt.scatter(
+# #         np.ones((len(_DATADEF.domain_names),)) * nsample,
+# #         holdout_adapt_nsample2accs[nsample],
+# #         edgecolors="teal",
+# #         facecolors="none",
+# #         marker="D",
+# #         s=12,
+# #     )
+
+# bax.axhline(
+#     holdout_source_acc,
+#     color="teal",
+#     linestyle="--",
+#     label=f"No fine-tuning",
+# )
+# bax.plot(
+#     ROBERTA_ADAPT_N_SAMPLES,
+#     [from_scratch_nsample2acc[nsample] for nsample in ROBERTA_ADAPT_N_SAMPLES],
+#     marker="D",
+#     c="chocolate",
+#     label=f"Fine-tuned from off-the-shelf",
+# )
+# # for nsample in ROBERTA_ADAPT_N_SAMPLES:
+# #     plt.scatter(
+# #         np.ones((len(_DATADEF.domain_names),)) * nsample,
+# #         from_scratch_nsample2accs[nsample],
+# #         edgecolors="chocolate",
+# #         facecolors="none",
+# #         marker="D",
+# #         s=12,
+# #     )
+# # plt.title(f"impact of fine-tuning ({_DATASET_NAME})")
+# bax.legend(loc="center right")
+# bax.set_xlabel("# Training sample")
+# bax.set_ylabel("Accuracy")
+# save_plt(_PLOT_SAVE_PATH)

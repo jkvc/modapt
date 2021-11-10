@@ -16,9 +16,7 @@ from modapt.dataset.common import calculate_labelprops
 from modapt.dataset.roberta_dataset import RobertaDataset
 from modapt.learning import valid_epoch
 from modapt.lexicon import eval_lexicon_model
-from modapt.model.logreg_config.grid_search import (
-    load_logreg_model_config_all_archs,
-)
+from modapt.model.logreg_config.grid_search import load_logreg_model_config_all_archs
 from modapt.utils import (
     AUTO_DEVICE,
     load_json,
@@ -289,7 +287,7 @@ save_json(roberta_model_stats, join(_SAVE_DIR, f"{_ROBERTA_ARCH}_deltas.json"))
 # full acc
 
 plt.clf()
-plt.figure(figsize=(7, 5))
+plt.figure(figsize=(6, 5))
 # roberta
 plt.axhline(
     roberta_model_perf["gt"]["mean"],
@@ -350,7 +348,7 @@ plt.axhline(
 # plt.title(f"holdout source full acc under estimated labelprops ({_DATASET_NAME})")
 plt.legend()
 plt.xlabel("# Samples for label distribution estimation")
-plt.ylabel("Holdout source accuracy")
+plt.ylabel("Accuracy")
 save_plt(join(_PLOT_SAVE_DIR, "full_acc.png"))
 
 # per source acc
@@ -436,15 +434,15 @@ def plot_single_source(ax, source):
     #     f"holdout source accs under estimated labelprops ({_DATASET_NAME}:{source})"
     # )
     ax.legend()
-    ax.set_xlabel("# Samples for labelprops estimation")
-    ax.set_ylabel("Holdout source accuracy")
+    ax.set_xlabel("# Samples for label distribution estimation")
+    ax.set_ylabel("Accuracy")
 
 
 # each source single image
 
 for source in _DATADEF.domain_names:
     plt.clf()
-    fig, ax = plt.subplots(figsize=(7, 5))
+    fig, ax = plt.subplots(figsize=(6, 5))
     plot_single_source(ax, source)
     save_plt(join(_PLOT_SAVE_DIR, f"compare_{source}.png"))
 
